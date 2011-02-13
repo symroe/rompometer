@@ -1,0 +1,47 @@
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["imagesparkline"]});
+      google.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn("number", "Romps");
+        data.addRows({{ latest_count }});
+        
+        {% for date in latest %}
+            data.setValue({{ forloop.counter0 }},0,{{ date.count }});
+        {% endfor %}
+        
+
+        var chart = new google.visualization.ImageSparkLine(document.getElementById('chart_div'));
+        chart.draw(data, {width: 600, height: 200, showAxisLines: false,  showValueLabels: false, labelPosition: 'left'});
+      }
+    </script>
+
+{% if today.count > yesterday.count %}
+    <h1>Romps are up!</h1>
+{% else %}
+    <h1>Romps are down!</h1>
+{% endif %}
+<div style="float:left; width:40%">
+    <h2>Romps today: {{ today.count }}</h2>
+    <ul>        
+    {% for romp in today_romps %}
+        <li><a href="{{ romp.link }}">{{ romp.title }}</a></li>
+    {% endfor %}
+    </ul>
+</div>
+<div style="float:left; width:40%">
+    <h2>Romps yesterday: {{ yesterday.count }}</h2>
+    <ul>        
+    {% for romp in yesterday_romps %}
+        <li><a href="{{ romp.link }}">{{ romp.title }}</a></li>
+    {% endfor %}
+    </ul>
+    
+</div>
+<p></p>
+<p></p></p>
+<p></p></p>
+<p>
+<div id="chart_div" style="clear:both;"></div>
